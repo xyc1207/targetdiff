@@ -150,17 +150,17 @@ class PDBProtein(object):
 
     def to_dict_atom(self):
         return {
-            'element': np.array(self.element, dtype=np.long),
+            'element': np.array(self.element, dtype=np.longlong),
             'molecule_name': self.title,
             'pos': np.array(self.pos, dtype=np.float32),
-            'is_backbone': np.array(self.is_backbone, dtype=np.bool),
+            'is_backbone': np.array(self.is_backbone, dtype=bool),
             'atom_name': self.atom_name,
-            'atom_to_aa_type': np.array(self.atom_to_aa_type, dtype=np.long)
+            'atom_to_aa_type': np.array(self.atom_to_aa_type, dtype=np.longlong)
         }
 
     def to_dict_residue(self):
         return {
-            'amino_acid': np.array(self.amino_acid, dtype=np.long),
+            'amino_acid': np.array(self.amino_acid, dtype=np.longlong),
             'center_of_mass': np.array(self.center_of_mass, dtype=np.float32),
             'pos_CA': np.array(self.pos_CA, dtype=np.float32),
             'pos_C': np.array(self.pos_C, dtype=np.float32),
@@ -264,8 +264,8 @@ def parse_sdf_file(path):
         col += [end, start]
         edge_type += 2 * [BOND_TYPES[bond.GetBondType()]]
 
-    edge_index = np.array([row, col], dtype=np.long)
-    edge_type = np.array(edge_type, dtype=np.long)
+    edge_index = np.array([row, col], dtype=np.longlong)
+    edge_type = np.array(edge_type, dtype=np.longlong)
 
     perm = (edge_index[0] * rd_num_atoms + edge_index[1]).argsort()
     edge_index = edge_index[:, perm]
