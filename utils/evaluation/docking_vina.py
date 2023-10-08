@@ -261,5 +261,44 @@ class VinaDockingTask(BaseDockingTask):
 #     dock = VinaDock(lig_pdbqt, prot_pdbqt)
 #     dock.get_box()
 #     dock.dock()
+
+if __name__ == '__main__':
+    def _test_1():
+        ligand_path = r"/home/yinxia/sandbox/targetdiff/outputs_pdb/sdf/000.sdf"
+        ligand_rdmol = next(iter(Chem.SDMolSupplier(ligand_path)))
+        runner = VinaDockingTask(
+            '/home/yinxia/sandbox/targetdiff/examples/1h36_A_rec_1h36_r88_lig_tt_docked_0_pocket10.pdb',
+            ligand_rdmol,
+            size_factor=1.2
+        )
+        results = runner.run()
+        print(results)
+
+    def _test_2():
+        protein_path = r"/home/yinxia/sandbox/targetdiff/examples/1h36_A_rec_1h36_r88_lig_tt_docked_0_pocket10.pdb"
+        smiles = r"c1(O)ccccc1"
+
+        lig_pdbqt = 'data/tmplig.pdbqt'
+        a = PrepLig(smiles, 'smi')
+        a.addH()
+        a.gen_conf()
+        a.get_pdbqt(lig_pdbqt)
+
+        prot_dry = 'data/tmpprotein_dry.pdb'
+        prot_pqr = 'data/tmpprotein.pqr'
+        prot_pdbqt = 'data/tmpprotein.pdbqt'
+
+        b = PrepProt(protein_path)
+        b.del_water(prot_dry)
+        b.addH(prot_pqr)
+        b.get_pdbqt(prot_pdbqt)
+
+        dock = VinaDock(lig_pdbqt, prot_pdbqt)
+        dock.get_box()
+        results = dock.dock(mode='dock')
+
+        print(results)
+
+    _test_2()
     
 
